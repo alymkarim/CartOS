@@ -1,0 +1,111 @@
+import { useEffect, useState } from "react";
+
+type Order = {
+  id: number;
+  stripe_session_id: string;
+  product_id: string;
+  quantity: number;
+  payment_status: string;
+  amount_total: number | null;
+  customer_email: string | null;
+  created_at: string;
+};
+
+const API_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+function formatAmount(amountTotal: number | null): string {
+  if (amountTotal === null) {
+    return "Not available";
+  }
+
+  return new Intl.NumberFormat("en-IE", {
+    style: "currency",
+    currency: "EUR",
+  }).format(amountTotal / 100);
+}
+
+function formatDate(date: string): string {
+  return new Date(date).toLocaleString("en-IE");
+}
+
+export default function OrdersPage() {
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function fetchOrders() {
+      try {
+        const response = await fetch(`${API_URL}/api/orders`);
+
+        if (!response.ok) {
+          throw new Error(`Request failed with status ${response.status}`);
+        }
+
+        const data: Order[] = await response.json();
+        setOrders(data);
+      } catch (error) {
+        console.error(error);
+        setError("Could not load orders.");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchOrders();
+  }, []);
+
+  if (isLoading) {
+    return <p>Loading orders...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
+
+  return (
+    <section>
+      <h2>Orders</h2>
+
+      {orders.length === 0 ? (
+        <p>No orders found.</p>
+      ) : (
+        <div>
+          {orders.map((order) => (
+            <article key={order.id}>
+              <h3>{order.product_id}</h3>
+
+              <p>
+                <strong>Order ID:</strong> {order.id}
+              </p>
+
+              <p>
+                <strong>Quantity:</strong> {order.quantity}
+              </p>
+
+              <p>
+                <strong>Status:</strong> {order.payment_status}
+              </p>
+
+              <p>
+                <strong>Total:</strong> {formatAmount(order.amount_total)}
+              </p>
+
+              <p>
+                <strong>Email:</strong>{" "}
+                {order.customer_email || "Not provided"}
+              </p>
+
+              <p>
+                <strong>Created:</strong> {formatDate(order.created_at)}
+              </p>
+
+              <hr />
+            </article>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
