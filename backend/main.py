@@ -3,7 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.routers import checkout, products, webhook
+from app.database import Base, engine
+from app import models
 
+Base.metadata.create_all(bind=engine)
 
 settings = get_settings()
 
