@@ -5,6 +5,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     stripe_secret_key: str
+    stripe_webhook_secret: str = ""
     frontend_url: str = "http://localhost:5173"
 
     model_config = SettingsConfigDict(
