@@ -2,7 +2,7 @@ import stripe
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.config import Settings, get_settings
-from app.products import get_product
+from app.product import get_product
 from app.schemas import CheckoutRequest, CheckoutResponse
 
 
@@ -66,9 +66,11 @@ def create_checkout_session(
         )
 
     except stripe.StripeError as error:
+        print("STRIPE ERROR:", str(error))
+
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
-            detail="Stripe could not create the checkout session.",
+            detail=str(error),
         ) from error
 
     if not session.url:
@@ -80,4 +82,6 @@ def create_checkout_session(
     return CheckoutResponse(
         checkout_url=session.url,
         session_id=session.id,
+
+        
     )

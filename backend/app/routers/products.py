@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.products import list_products
+from app.product import list_products
 from app.schemas import Product
 
 
