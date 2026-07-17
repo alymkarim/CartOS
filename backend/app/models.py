@@ -1,10 +1,9 @@
 from datetime import datetime, timezone
 
-from sqlalchemy import DateTime, ForeignKey, Integer, String
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
-
 
 class User(Base):
     __tablename__ = "users"
@@ -33,10 +32,21 @@ class User(Base):
         default="customer",
     )
 
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+    )
+
     orders: Mapped[list["Order"]] = relationship(
         back_populates="user",
     )
-
 
 class Order(Base):
     __tablename__ = "orders"
