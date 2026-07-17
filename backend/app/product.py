@@ -1,6 +1,5 @@
 from app.schemas import Product
 
-
 PRODUCTS: dict[str, Product] = {
     "desk-lamp": Product(
         id="desk-lamp",
