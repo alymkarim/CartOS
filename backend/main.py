@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
-from app.routers import checkout, products, webhook
+from app.routers import checkout, orders, products, webhook
 from app.database import Base, engine
 from app import models
 
@@ -26,6 +26,7 @@ app.add_middleware(
 app.include_router(products.router)
 app.include_router(checkout.router)
 app.include_router(webhook.router)
+app.include_router(orders.router)
 
 
 @app.get("/")
