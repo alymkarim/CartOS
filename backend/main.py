@@ -7,21 +7,18 @@ from app.routers import checkout, products, webhook
 
 settings = get_settings()
 
-app = FastAPI(
-    title="PayFlow API",
-    description="FastAPI and Stripe Checkout payment API",
-    version="1.0.0",
-)
-
+app = FastAPI(title="PayForge API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.frontend_url],
-    allow_credentials=False,
-    allow_methods=["GET", "POST"],
-    allow_headers=["Content-Type"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
-
 
 app.include_router(products.router)
 app.include_router(checkout.router)
