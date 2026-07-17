@@ -1,9 +1,41 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
-from sqlalchemy import DateTime, Integer, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import DateTime, ForeignKey, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        index=True,
+    )
+
+    email: Mapped[str] = mapped_column(
+        String(320),
+        unique=True,
+        nullable=False,
+        index=True,
+    )
+
+    hashed_password: Mapped[str] = mapped_column(
+        String,
+        nullable=False,
+    )
+
+    role: Mapped[str] = mapped_column(
+        String(20),
+        nullable=False,
+        default="customer",
+    )
+
+    orders: Mapped[list["Order"]] = relationship(
+        back_populates="user",
+    )
 
 
 class Order(Base):
@@ -19,7 +51,6 @@ class Order(Base):
         String,
         unique=True,
         nullable=False,
-        index=True,
     )
 
     product_id: Mapped[str] = mapped_column(
@@ -48,7 +79,18 @@ class Order(Base):
     )
 
     created_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=datetime.utcnow,
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
         nullable=False,
+    )
+
+    # Add these two fields inside Order
+    user_id: Mapped[int | None] = mapped_column(
+        ForeignKey("users.id"),
+        nullable=True,
+        index=True,
+    )
+
+    user: Mapped["User | None"] = relationship(
+        back_populates="orders",
     )
