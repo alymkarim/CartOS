@@ -43,13 +43,19 @@ async def stripe_webhook(
             detail="Invalid webhook signature.",
         ) from error
 
-    if event["type"] == "checkout.session.completed":
-        session = event["data"]["object"]
+    if event.type == "checkout.session.completed":
+        session = event.data.object
 
         print("PAYMENT COMPLETED")
-        print("Session ID:", session["id"])
-        print("Payment status:", session.get("payment_status"))
-        print("Product ID:", session.get("metadata", {}).get("product_id"))
-        print("Quantity:", session.get("metadata", {}).get("quantity"))
+        print("Session ID:", session.id)
+        print("Payment status:", session.payment_status)
+
+        metadata = session.metadata
+
+        product_id = metadata.product_id if metadata else None
+        quantity = metadata.quantity if metadata else None
+
+        print("Product ID:", product_id)
+        print("Quantity:", quantity)
 
     return {"received": True}
