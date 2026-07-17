@@ -1,4 +1,17 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
+from datetime import datetime
+
+class OrderOut(BaseModel):
+    id: int
+    stripe_session_id: str
+    product_id: str
+    quantity: int
+    payment_status: str
+    amount_total: int | None
+    customer_email: str | None
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class Product(BaseModel):
