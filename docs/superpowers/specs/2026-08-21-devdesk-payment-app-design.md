@@ -61,17 +61,17 @@ Each product includes an `image_url` field pointing to a placeholder image.
 
 ### Layout & Personality
 
-- **Navbar:** Sticky top, white with warm shadow. Logo "DevDesk" left (with a small wrench emoji), nav links center, cart icon + auth right
-- **Hero:** Warm gradient background (coral → rose), large friendly headline with a wave emoji, subtext, CTA button with arrow
-- **Product cards:** White, rounded-2xl, coral/teal/amber top-strip (varies per product), product image, playful hover: slight tilt + colored shadow
-- **Buttons:** Rounded-full, coral gradient primary with hover glow, teal secondary buttons
-- **Background:** Warm cream with subtle grain texture (CSS noise pattern)
-- **Footer:** Warm dark (`#1c1917`), friendly copy like "Made with ☕ and code"
-- **Cart icon:** Animated count badge (bounce on add), coral colored
+- **Navbar:** Sticky top, white with subtle shadow. Logo "DevDesk" left, nav links center, cart icon + auth right. Clean and professional.
+- **Hero:** Subtle warm gradient background (coral → rose, soft opacity), large confident headline, concise subtext, primary CTA button
+- **Product cards:** White, rounded-xl, subtle colored accent line on top (varies per product), clean hover: lift + soft shadow
+- **Buttons:** Rounded-lg, coral primary with subtle gradient on hover, clean secondary outline buttons
+- **Background:** Warm off-white (`#fffbf5`), clean and professional
+- **Footer:** Dark (`#1c1917`), "Built with FastAPI, React & Stripe" — clean credit
+- **Cart icon:** Count badge with subtle pulse animation on add
 - **Status badges:** Pill-shaped, color-coded (paid=emerald, pending=amber, failed=red)
-- **Empty states:** Friendly illustrations or emoji + encouraging copy ("Your cart is lonely 🛒")
-- **Micro-interactions:** Button press effects, card hover tilts, smooth page transitions
-- **Typography:** Slightly rounder, friendlier feel — use `font-feature-settings: "ss01"` for alternates
+- **Empty states:** Clean copy with subtle illustrations, encouraging but professional
+- **Micro-interactions:** Subtle — button hover transitions, card shadow changes, smooth page transitions
+- **Typography:** Inter, clean and confident. Professional feel.
 
 ### Responsive
 
