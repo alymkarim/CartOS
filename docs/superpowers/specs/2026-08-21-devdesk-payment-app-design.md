@@ -42,16 +42,16 @@ Each product includes an `image_url` field pointing to a placeholder image.
 
 | Role | Color | Hex |
 |---|---|---|
-| Background | Cool light gray | `#f8fafc` |
+| Background | Warm cream | `#fffbf5` |
 | Surface | White | `#ffffff` |
-| Primary | Indigo | `#6366f1` |
-| Primary gradient | Indigo → Violet | `#6366f1` → `#8b5cf6` |
-| Secondary accent | Cyan | `#06b6d4` |
+| Primary | Coral | `#f97316` |
+| Primary gradient | Coral → Rose | `#f97316` → `#f43f5e` |
+| Secondary accent | Teal | `#14b8a6` |
 | Success | Emerald | `#10b981` |
 | Error | Red | `#ef4444` |
 | Warning/Notification | Amber | `#f59e0b` |
-| Text primary | Dark gray | `#1f2937` |
-| Text muted | Gray | `#6b7280` |
+| Text primary | Warm dark | `#1c1917` |
+| Text muted | Warm gray | `#78716c` |
 
 ### Typography
 
@@ -61,14 +61,17 @@ Each product includes an `image_url` field pointing to a placeholder image.
 
 ### Layout & Personality
 
-- **Navbar:** Sticky top, white with subtle shadow. Logo "DevDesk" left, nav links center, cart icon + auth right
-- **Hero:** Gradient mesh background (indigo → violet), large headline, CTA button
-- **Product cards:** White, rounded-xl, colored top-strip (varies per product), hover: scale(1.02) + colored shadow
-- **Buttons:** Gradient primary buttons with hover animation, solid secondary buttons
-- **Background:** Subtle dot-grid pattern on light gray
-- **Footer:** Dark (`#111827`), "Built with FastAPI + React + Stripe" credit
-- **Cart icon:** Animated count badge (bounce on add)
-- **Status badges:** Color-coded (paid=emerald, pending=amber, failed=red)
+- **Navbar:** Sticky top, white with warm shadow. Logo "DevDesk" left (with a small wrench emoji), nav links center, cart icon + auth right
+- **Hero:** Warm gradient background (coral → rose), large friendly headline with a wave emoji, subtext, CTA button with arrow
+- **Product cards:** White, rounded-2xl, coral/teal/amber top-strip (varies per product), product image, playful hover: slight tilt + colored shadow
+- **Buttons:** Rounded-full, coral gradient primary with hover glow, teal secondary buttons
+- **Background:** Warm cream with subtle grain texture (CSS noise pattern)
+- **Footer:** Warm dark (`#1c1917`), friendly copy like "Made with ☕ and code"
+- **Cart icon:** Animated count badge (bounce on add), coral colored
+- **Status badges:** Pill-shaped, color-coded (paid=emerald, pending=amber, failed=red)
+- **Empty states:** Friendly illustrations or emoji + encouraging copy ("Your cart is lonely 🛒")
+- **Micro-interactions:** Button press effects, card hover tilts, smooth page transitions
+- **Typography:** Slightly rounder, friendlier feel — use `font-feature-settings: "ss01"` for alternates
 
 ### Responsive
 
