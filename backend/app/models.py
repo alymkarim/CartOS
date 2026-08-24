@@ -184,7 +184,18 @@ class Order(Base):
         nullable=False,
     )
 
-    # Add these two fields inside Order
+    status: Mapped[str] = mapped_column(
+        String(20),
+        nullable=False,
+        default="pending",
+    )
+
+    status_updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+    )
+
     user_id: Mapped[int | None] = mapped_column(
         ForeignKey("users.id"),
         nullable=True,

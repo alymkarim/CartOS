@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 import stripe
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.orm import Session
@@ -84,6 +86,8 @@ async def stripe_webhook(
             amount_total=checkout_session.amount_total,
             customer_email=customer_email,
             user_id=user_id,
+            status="pending",
+            status_updated_at=datetime.now(timezone.utc),
         )
 
         try:

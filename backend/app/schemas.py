@@ -37,6 +37,8 @@ class OrderOut(BaseModel):
     amount_total: int | None
     customer_email: str | None
     created_at: datetime
+    status: str
+    status_updated_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
 
