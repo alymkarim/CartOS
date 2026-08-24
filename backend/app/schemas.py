@@ -48,6 +48,7 @@ class Product(BaseModel):
     price_cents: int = Field(gt=0)
     currency: str = "eur"
     emoji: str
+    image_url: str
 
 
 class CheckoutRequest(BaseModel):
