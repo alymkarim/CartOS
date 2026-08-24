@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { api } from "../services/api";
 import type { Product, Review } from "../types";
 import StarRating from "./StarRating";
+import WishlistButton from "./WishlistButton";
 
 export default function ProductCard({ product }: { product: Product }) {
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -27,8 +28,11 @@ export default function ProductCard({ product }: { product: Product }) {
   return (
     <Link
       to={`/products/${product.id}`}
-      className="group bg-surface rounded-xl overflow-hidden shadow-sm hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 hover:-translate-y-1"
+      className="group relative bg-surface rounded-xl overflow-hidden shadow-sm hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 hover:-translate-y-1"
     >
+      <div className="absolute top-2 right-2 z-10">
+        <WishlistButton productId={product.id} size="sm" />
+      </div>
       <div className="aspect-square overflow-hidden bg-black/5">
         <img
           src={product.image_url}
