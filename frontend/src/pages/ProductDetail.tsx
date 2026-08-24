@@ -1,9 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { api } from "../services/api";
-import type { Product } from "../types";
+import { useCart } from "../contexts/CartContext";
+import { useAuth } from "../contexts/AuthContext";
+import type { Product, Review } from "../types";
 import Button from "../components/ui/Button";
 import Spinner from "../components/ui/Spinner";
+import ReviewForm from "../components/ReviewForm";
+import ReviewCard from "../components/ReviewCard";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
@@ -11,6 +15,19 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const { addItem } = useCart();
+  const { isAuthenticated } = useAuth();
+
+  const fetchReviews = useCallback(async () => {
+    if (!id) return;
+    try {
+      const data = await api.get<Review[]>(`/api/reviews/${id}`);
+      setReviews(data);
+    } catch (err) {
+      console.error("Failed to fetch reviews:", err);
+    }
+  }, [id]);
 
   useEffect(() => {
     api
@@ -19,6 +36,10 @@ export default function ProductDetail() {
       .catch(console.error)
       .finally(() => setIsLoading(false));
   }, [id]);
+
+  useEffect(() => {
+    fetchReviews();
+  }, [fetchReviews]);
 
   if (isLoading) return <Spinner />;
 
@@ -39,9 +60,15 @@ export default function ProductDetail() {
   }).format(product.price_cents / 100);
 
   async function handleAddToCart() {
+    if (!product) return;
     setIsAdding(true);
-    // Cart integration comes in Task 5
-    setTimeout(() => setIsAdding(false), 500);
+    try {
+      await addItem(product.id, quantity);
+    } catch (err) {
+      console.error("Failed to add to cart:", err);
+    } finally {
+      setIsAdding(false);
+    }
   }
 
   return (
@@ -104,6 +131,29 @@ export default function ProductDetail() {
           </div>
         </div>
       </div>
+
+      <section className="mt-12">
+        <h2 className="text-2xl font-bold mb-4">
+          Reviews ({reviews.length})
+          {reviews.length > 0 && (
+            <span className="ml-2 text-lg font-normal text-text-muted">
+              · {(reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)} stars
+            </span>
+          )}
+        </h2>
+
+        {isAuthenticated && (
+          <div className="mb-6">
+            <ReviewForm productId={product.id} onReviewAdded={fetchReviews} />
+          </div>
+        )}
+
+        <div className="space-y-2">
+          {reviews.map((review) => (
+            <ReviewCard key={review.id} review={review} />
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
