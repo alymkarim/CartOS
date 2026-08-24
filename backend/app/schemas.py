@@ -122,3 +122,14 @@ class WishlistItemOut(BaseModel):
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class CouponValidate(BaseModel):
+    code: str
+    order_amount: int
+
+
+class CouponValidationResponse(BaseModel):
+    valid: bool
+    discount_amount: int
+    message: str
