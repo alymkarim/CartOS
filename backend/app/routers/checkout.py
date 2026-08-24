@@ -62,10 +62,10 @@ def create_checkout_session(
                 }
             ],
             success_url=(
-                f"{settings.frontend_url}/success"
+                f"{settings.frontend_url}/checkout/success"
                 "?session_id={CHECKOUT_SESSION_ID}"
             ),
-            cancel_url=f"{settings.frontend_url}/cancel",
+            cancel_url=f"{settings.frontend_url}/checkout/cancel",
             metadata={
                 "product_id": product.id,
                 "quantity": str(checkout_request.quantity),

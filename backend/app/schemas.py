@@ -112,3 +112,11 @@ class ReviewOut(BaseModel):
     user_email: str
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class WishlistItemOut(BaseModel):
+    id: int
+    product_id: str
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
