@@ -58,43 +58,42 @@ async def stripe_webhook(
             db.query(Order)
             .filter(Order.stripe_session_id == stripe_session_id)
             .first()
-    )
+        )
 
-    if existing_order:
-        print("Order already exists:", stripe_session_id)
-        return {
-            "received": True,
-            "message": "Order already processed",
-        }
+        if existing_order:
+            print("Order already exists:", stripe_session_id)
+            return {
+                "received": True,
+                "message": "Order already processed",
+            }
 
-    customer_email = None
+        customer_email = None
 
-    if checkout_session.customer_details:
-        customer_email = checkout_session.customer_details.email
+        if checkout_session.customer_details:
+            customer_email = checkout_session.customer_details.email
 
-    new_order = Order(
-        stripe_session_id=stripe_session_id,
-        product_id=product_id,
-        quantity=quantity,
-        payment_status=checkout_session.payment_status,
-        amount_total=checkout_session.amount_total,
-        customer_email=customer_email,
-    )
+        user_id = None
+        if metadata.get("user_id"):
+            user_id = int(metadata.user_id)
 
-    try:
-        db.add(new_order)
-        db.commit()
-        db.refresh(new_order)
+        new_order = Order(
+            stripe_session_id=stripe_session_id,
+            product_id=product_id,
+            quantity=quantity,
+            payment_status=checkout_session.payment_status,
+            amount_total=checkout_session.amount_total,
+            customer_email=customer_email,
+            user_id=user_id,
+        )
 
-    except Exception:
-        db.rollback()
-        raise
+        try:
+            db.add(new_order)
+            db.commit()
+            db.refresh(new_order)
+        except Exception:
+            db.rollback()
+            raise
 
-    print("ORDER SAVED")
-    print("Order ID:", new_order.id)
-    print("Stripe session:", new_order.stripe_session_id)
-    print("Product:", new_order.product_id)
-    print("Quantity:", new_order.quantity)
-    print("Amount:", new_order.amount_total)
+        print("ORDER SAVED:", new_order.id)
 
     return {"received": True}
