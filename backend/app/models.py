@@ -256,6 +256,66 @@ class Review(Base):
     )
 
 
+class Coupon(Base):
+    __tablename__ = "coupons"
+
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        index=True,
+    )
+
+    code: Mapped[str] = mapped_column(
+        String(50),
+        unique=True,
+        nullable=False,
+        index=True,
+    )
+
+    discount_type: Mapped[str] = mapped_column(
+        String(20),
+        nullable=False,
+    )
+
+    discount_value: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+    )
+
+    min_order_amount: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+
+    max_uses: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+
+    uses_count: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+        default=0,
+    )
+
+    expires_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        nullable=False,
+        default=True,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+
 class WishlistItem(Base):
     __tablename__ = "wishlist_items"
 

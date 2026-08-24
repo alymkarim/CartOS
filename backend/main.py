@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 
 from app.config import get_settings
-from app.routers import auth, cart, checkout, orders, products, reviews, webhook, wishlist
+from app.routers import auth, cart, checkout, coupons, orders, products, reviews, webhook, wishlist
 from app.database import Base, engine
 from app import models
 
@@ -32,6 +32,7 @@ app.include_router(auth.router)
 app.include_router(cart.router)
 app.include_router(reviews.router)
 app.include_router(wishlist.router)
+app.include_router(coupons.router)
 
 
 @app.get("/")
