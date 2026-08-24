@@ -1,14 +1,25 @@
+import secrets
+from datetime import datetime, timedelta, timezone
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.dependencies import get_current_user
-from app.models import User
-from app.schemas import Token, UserOut, UserRegister
+from app.models import PasswordReset, User
+from app.schemas import (
+    ForgotPasswordRequest,
+    ForgotPasswordResponse,
+    ResetPasswordRequest,
+    Token,
+    UserOut,
+    UserRegister,
+)
 from app.security import (
     create_access_token,
     hash_password,
+    validate_password_strength,
     verify_password,
 )
 
@@ -28,6 +39,13 @@ def register(
     user_data: UserRegister,
     db: Session = Depends(get_db),
 ):
+    error = validate_password_strength(user_data.password)
+    if error:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=error,
+        )
+
     normalized_email = user_data.email.lower()
 
     existing_user = (
@@ -99,3 +117,82 @@ def get_me(
     current_user: User = Depends(get_current_user),
 ):
     return current_user
+
+
+@router.post(
+    "/forgot-password",
+    response_model=ForgotPasswordResponse,
+)
+def forgot_password(
+    request: ForgotPasswordRequest,
+    db: Session = Depends(get_db),
+):
+    user = (
+        db.query(User)
+        .filter(User.email == request.email.lower())
+        .first()
+    )
+
+    if user is None:
+        return ForgotPasswordResponse(
+            token="",
+            message="If an account exists with this email, a reset link has been generated.",
+        )
+
+    token = secrets.token_urlsafe(32)
+    expires_at = datetime.now(timezone.utc) + timedelta(hours=1)
+
+    reset = PasswordReset(
+        user_id=user.id,
+        token=token,
+        expires_at=expires_at,
+    )
+    db.add(reset)
+    db.commit()
+
+    return ForgotPasswordResponse(
+        token=token,
+        message="If an account exists with this email, a reset link has been generated.",
+    )
+
+
+@router.post("/reset-password")
+def reset_password(
+    request: ResetPasswordRequest,
+    db: Session = Depends(get_db),
+):
+    error = validate_password_strength(request.password)
+    if error:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=error,
+        )
+
+    reset = (
+        db.query(PasswordReset)
+        .filter(
+            PasswordReset.token == request.token,
+            PasswordReset.used == False,
+            PasswordReset.expires_at > datetime.now(timezone.utc),
+        )
+        .first()
+    )
+
+    if not reset:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired reset token.",
+        )
+
+    user = db.get(User, reset.user_id)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User not found.",
+        )
+
+    user.hashed_password = hash_password(request.password)
+    reset.used = True
+    db.commit()
+
+    return {"message": "Password reset successful."}
