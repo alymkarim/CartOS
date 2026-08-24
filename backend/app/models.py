@@ -5,6 +5,49 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
 
+
+class CartItem(Base):
+    __tablename__ = "cart_items"
+
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        index=True,
+    )
+
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id"),
+        nullable=False,
+        index=True,
+    )
+
+    product_id: Mapped[str] = mapped_column(
+        String,
+        nullable=False,
+    )
+
+    quantity: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+        default=1,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+    )
+
+    user: Mapped["User"] = relationship(back_populates="cart_items")
+
+
 class User(Base):
     __tablename__ = "users"
 
@@ -46,6 +89,11 @@ class User(Base):
 
     orders: Mapped[list["Order"]] = relationship(
         back_populates="user",
+    )
+
+    cart_items: Mapped[list["CartItem"]] = relationship(
+        back_populates="user",
+        cascade="all, delete-orphan",
     )
 
 class Order(Base):

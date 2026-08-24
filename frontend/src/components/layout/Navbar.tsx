@@ -1,6 +1,24 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
+import { useCart } from "../../contexts/CartContext";
+import { useState, useRef, useEffect } from "react";
 
 export default function Navbar() {
+  const { user, isAuthenticated, logout } = useAuth();
+  const { itemCount } = useCart();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <nav className="sticky top-0 z-50 bg-surface/80 backdrop-blur-md border-b border-black/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -36,14 +54,51 @@ export default function Navbar() {
                   d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
                 />
               </svg>
+              {itemCount > 0 && (
+                <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-white text-xs flex items-center justify-center font-medium">
+                  {itemCount}
+                </span>
+              )}
             </Link>
 
-            <Link
-              to="/login"
-              className="text-sm font-medium text-text-muted hover:text-text transition-colors"
-            >
-              Sign In
-            </Link>
+            {isAuthenticated ? (
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="h-8 w-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-medium"
+                >
+                  {user?.email.charAt(0).toUpperCase()}
+                </button>
+
+                {dropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-surface rounded-lg shadow-lg border border-black/5 py-1">
+                    <Link
+                      to="/account"
+                      onClick={() => setDropdownOpen(false)}
+                      className="block px-4 py-2 text-sm text-text hover:bg-black/5"
+                    >
+                      My Account
+                    </Link>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setDropdownOpen(false);
+                      }}
+                      className="block w-full text-left px-4 py-2 text-sm text-text hover:bg-black/5"
+                    >
+                      Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="text-sm font-medium text-text-muted hover:text-text transition-colors"
+              >
+                Sign In
+              </Link>
+            )}
           </div>
         </div>
       </div>

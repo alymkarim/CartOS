@@ -59,3 +59,22 @@ class CheckoutRequest(BaseModel):
 class CheckoutResponse(BaseModel):
     checkout_url: str
     session_id: str
+
+
+class CartItemCreate(BaseModel):
+    product_id: str
+    quantity: int = Field(default=1, ge=1, le=10)
+
+
+class CartItemUpdate(BaseModel):
+    quantity: int = Field(ge=1, le=10)
+
+
+class CartItemOut(BaseModel):
+    id: int
+    product_id: str
+    quantity: int
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
