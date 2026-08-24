@@ -8,6 +8,7 @@ import Button from "../components/ui/Button";
 import Spinner from "../components/ui/Spinner";
 import ReviewForm from "../components/ReviewForm";
 import ReviewCard from "../components/ReviewCard";
+import WishlistButton from "../components/WishlistButton";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
@@ -116,14 +117,17 @@ export default function ProductDetail() {
               </div>
             </div>
 
-            <Button
-              size="lg"
-              className="w-full"
-              isLoading={isAdding}
-              onClick={handleAddToCart}
-            >
-              Add to Cart
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                size="lg"
+                className="flex-1"
+                isLoading={isAdding}
+                onClick={handleAddToCart}
+              >
+                Add to Cart
+              </Button>
+              <WishlistButton productId={product.id} size="lg" />
+            </div>
 
             <p className="text-xs text-text-muted text-center">
               Secure checkout powered by Stripe
