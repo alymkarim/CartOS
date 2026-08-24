@@ -92,3 +92,23 @@ class ForgotPasswordResponse(BaseModel):
 class ResetPasswordRequest(BaseModel):
     token: str
     password: str = Field(min_length=8, max_length=128)
+
+
+class ReviewCreate(BaseModel):
+    product_id: str
+    rating: int = Field(ge=1, le=5)
+    title: str = Field(max_length=100)
+    comment: str = Field(max_length=1000)
+
+
+class ReviewOut(BaseModel):
+    id: int
+    user_id: int
+    product_id: str
+    rating: int
+    title: str
+    comment: str
+    created_at: datetime
+    user_email: str
+
+    model_config = ConfigDict(from_attributes=True)
