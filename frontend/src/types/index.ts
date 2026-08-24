@@ -36,3 +36,14 @@ export interface AuthResponse {
   access_token: string;
   token_type: string;
 }
+
+export interface Review {
+  id: number;
+  user_id: number;
+  product_id: string;
+  rating: number;
+  title: string;
+  comment: string;
+  created_at: string;
+  user_email: string;
+}

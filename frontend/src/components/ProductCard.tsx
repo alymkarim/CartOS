@@ -1,7 +1,24 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import type { Product } from "../types";
+import { api } from "../services/api";
+import type { Product, Review } from "../types";
+import StarRating from "./StarRating";
 
 export default function ProductCard({ product }: { product: Product }) {
+  const [reviews, setReviews] = useState<Review[]>([]);
+
+  useEffect(() => {
+    api
+      .get<Review[]>(`/api/reviews/${product.id}`)
+      .then(setReviews)
+      .catch(console.error);
+  }, [product.id]);
+
+  const avgRating =
+    reviews.length > 0
+      ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+      : 0;
+
   const price = new Intl.NumberFormat("en-IE", {
     style: "currency",
     currency: product.currency.toUpperCase(),
@@ -23,6 +40,12 @@ export default function ProductCard({ product }: { product: Product }) {
         <h3 className="font-semibold text-text group-hover:text-primary transition-colors">
           {product.name}
         </h3>
+        {avgRating > 0 && (
+          <div className="flex items-center gap-1 mt-1">
+            <StarRating rating={Math.round(avgRating)} readonly size="sm" />
+            <span className="text-xs text-text-muted">({reviews.length})</span>
+          </div>
+        )}
         <p className="text-sm text-text-muted mt-1 line-clamp-2">
           {product.description}
         </p>
