@@ -5,6 +5,7 @@ import type { Order } from "../types";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
 import Spinner from "../components/ui/Spinner";
+import OrderTimeline from "../components/OrderTimeline";
 
 export default function OrderDetail() {
   const { id } = useParams<{ id: string }>();
@@ -92,6 +93,15 @@ export default function OrderDetail() {
               {order.stripe_session_id}
             </span>
           </div>
+        </div>
+
+        <div className="mt-6 pt-6 border-t border-black/5">
+          <h3 className="font-semibold mb-4">Order Status</h3>
+          <OrderTimeline
+            status={order.status}
+            createdAt={order.created_at}
+            statusUpdatedAt={order.status_updated_at}
+          />
         </div>
       </div>
     </div>

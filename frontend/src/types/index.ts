@@ -30,6 +30,8 @@ export interface Order {
   amount_total: number | null;
   customer_email: string | null;
   created_at: string;
+  status: string;
+  status_updated_at: string;
 }
 
 export interface AuthResponse {
