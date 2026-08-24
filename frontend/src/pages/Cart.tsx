@@ -8,15 +8,28 @@ import { api } from "../services/api";
 import { useState } from "react";
 
 export default function Cart() {
-  const { items, total, itemCount, isLoading } = useCart();
+  const { items, total, itemCount, isLoading, couponCode, discountAmount, applyCoupon, removeCoupon } = useCart();
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [couponInput, setCouponInput] = useState("");
+  const [couponError, setCouponError] = useState("");
+  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
 
   const formattedTotal = new Intl.NumberFormat("en-IE", {
     style: "currency",
     currency: "EUR",
   }).format(total / 100);
+
+  async function handleApplyCoupon() {
+    setCouponError("");
+    setIsApplyingCoupon(true);
+    const success = await applyCoupon(couponInput);
+    if (!success) {
+      setCouponError("Invalid coupon code");
+    }
+    setIsApplyingCoupon(false);
+  }
 
   async function handleCheckout() {
     if (!isAuthenticated) {
@@ -28,7 +41,10 @@ export default function Cart() {
     try {
       const data = await api.post<{ checkout_url: string; session_id: string }>(
         "/api/checkout/cart",
-        { items: items.map(({ product_id, quantity }) => ({ product_id, quantity })) }
+        {
+          items: items.map(({ product_id, quantity }) => ({ product_id, quantity })),
+          coupon_code: couponCode,
+        }
       );
       window.location.href = data.checkout_url;
     } catch (err) {
@@ -87,10 +103,48 @@ export default function Cart() {
                 <span className="text-text-muted">Shipping</span>
                 <span>Free</span>
               </div>
+
+              <div className="mt-4 space-y-2">
+                {couponCode ? (
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-success">
+                      Coupon: {couponCode}
+                      <button onClick={removeCoupon} className="ml-2 text-error">(remove)</button>
+                    </span>
+                    <span className="text-success">-€{discountAmount / 100}</span>
+                  </div>
+                ) : (
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={couponInput}
+                      onChange={(e) => setCouponInput(e.target.value)}
+                      placeholder="Coupon code"
+                      className="flex-1 rounded-lg border border-black/10 px-3 py-2 text-sm"
+                    />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={handleApplyCoupon}
+                      isLoading={isApplyingCoupon}
+                    >
+                      Apply
+                    </Button>
+                  </div>
+                )}
+                {couponError && <p className="text-xs text-error">{couponError}</p>}
+              </div>
+
               <div className="border-t border-black/5 pt-2 mt-2">
+                {discountAmount > 0 && (
+                  <div className="flex justify-between text-sm text-success mb-1">
+                    <span>Discount</span>
+                    <span>-€{discountAmount / 100}</span>
+                  </div>
+                )}
                 <div className="flex justify-between font-semibold text-base">
                   <span>Total</span>
-                  <span>{formattedTotal}</span>
+                  <span>€{(total - discountAmount) / 100}</span>
                 </div>
               </div>
             </div>
