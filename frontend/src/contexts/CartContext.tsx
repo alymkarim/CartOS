@@ -28,6 +28,10 @@ interface CartContextType {
   clearCart: () => void;
   total: number;
   itemCount: number;
+  couponCode: string | null;
+  discountAmount: number;
+  applyCoupon: (code: string) => Promise<boolean>;
+  removeCoupon: () => void;
 }
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -36,6 +40,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItemWithProduct[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [couponCode, setCouponCode] = useState<string | null>(null);
+  const [discountAmount, setDiscountAmount] = useState(0);
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
@@ -153,6 +159,28 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  async function applyCoupon(code: string): Promise<boolean> {
+    try {
+      const data = await api.post<{ valid: boolean; discount_amount: number; message: string }>(
+        "/api/coupons/validate",
+        { code, order_amount: total }
+      );
+      if (data.valid) {
+        setCouponCode(code);
+        setDiscountAmount(data.discount_amount);
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  }
+
+  function removeCoupon() {
+    setCouponCode(null);
+    setDiscountAmount(0);
+  }
+
   const total = items.reduce(
     (sum, item) => sum + item.product.price_cents * item.quantity,
     0
@@ -171,6 +199,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
         clearCart,
         total,
         itemCount,
+        couponCode,
+        discountAmount,
+        applyCoupon,
+        removeCoupon,
       }}
     >
       {children}
