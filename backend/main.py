@@ -8,16 +8,21 @@ from app.routers import auth, cart, checkout, coupons, orders, products, reviews
 
 settings = get_settings()
 
-app = FastAPI(title="PayForge API")
+app = FastAPI(title="DevDesk API")
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, rate_limit_exceeded_handler)
 
+# CORS - allow frontend URL from env + localhost for dev
+allowed_origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+if settings.frontend_url:
+    allowed_origins.append(settings.frontend_url)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-    ],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
