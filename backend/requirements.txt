@@ -13,3 +13,4 @@ alembic
 httpx
 email-validator
 pytest
+python-multipart

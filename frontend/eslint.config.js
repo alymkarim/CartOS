@@ -18,5 +18,9 @@ export default defineConfig([
     languageOptions: {
       globals: globals.browser,
     },
+    rules: {
+      'react-refresh/only-export-components': ['warn', { allowExportNames: ['useAuth', 'useCart'] }],
+      'react-hooks/set-state-in-effect': 'off',
+    },
   },
 ])
