@@ -50,7 +50,8 @@ async def stripe_webhook(
     
     if event.type == "checkout.session.completed":
         checkout_session = event.data.object
-        metadata = checkout_session.metadata
+        # Convert Stripe metadata to regular dict
+        metadata = dict(checkout_session.metadata) if checkout_session.metadata else {}
 
         stripe_session_id = checkout_session.id
 
@@ -72,11 +73,11 @@ async def stripe_webhook(
             customer_email = checkout_session.customer_details.email
 
         user_id = None
-        if metadata and "user_id" in metadata:
+        if metadata.get("user_id"):
             user_id = int(metadata["user_id"])
 
         # Handle cart checkout (multiple items)
-        if metadata and metadata.get("cart_checkout") == "true":
+        if metadata.get("cart_checkout") == "true":
             items_str = metadata.get("items", "")
             items = items_str.split("|") if items_str else []
             
@@ -109,8 +110,8 @@ async def stripe_webhook(
                 raise
         else:
             # Handle single product checkout
-            product_id = metadata.product_id
-            quantity = int(metadata.quantity)
+            product_id = metadata.get("product_id", "unknown")
+            quantity = int(metadata.get("quantity", 1))
 
             new_order = Order(
                 stripe_session_id=stripe_session_id,

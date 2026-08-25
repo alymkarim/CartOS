@@ -35,6 +35,11 @@ class ApiClient {
       throw new Error(error.detail || `Request failed with status ${response.status}`);
     }
 
+    // Handle 204 No Content
+    if (response.status === 204) {
+      return {} as T;
+    }
+
     return response.json();
   }
 
