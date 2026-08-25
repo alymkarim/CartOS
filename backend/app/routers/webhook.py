@@ -72,11 +72,11 @@ async def stripe_webhook(
             customer_email = checkout_session.customer_details.email
 
         user_id = None
-        if metadata.get("user_id"):
-            user_id = int(metadata.user_id)
+        if metadata and "user_id" in metadata:
+            user_id = int(metadata["user_id"])
 
         # Handle cart checkout (multiple items)
-        if metadata.get("cart_checkout") == "true":
+        if metadata and metadata.get("cart_checkout") == "true":
             items_str = metadata.get("items", "")
             items = items_str.split("|") if items_str else []
             
