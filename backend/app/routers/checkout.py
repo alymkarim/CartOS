@@ -121,12 +121,19 @@ def create_cart_checkout_session(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Product {item.product_id} not found.",
             )
+        # Create a Stripe product with metadata
+        stripe_product = stripe.Product.create(
+            name=product.name,
+            description=product.description,
+            metadata={"product_id": product.id},
+        )
         line_items.append({
             "price_data": {
                 "currency": product.currency,
                 "product_data": {
                     "name": product.name,
                     "description": product.description,
+                    "product": stripe_product.id,
                 },
                 "unit_amount": product.price_cents,
             },

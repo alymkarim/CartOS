@@ -53,8 +53,6 @@ async def stripe_webhook(
         metadata = checkout_session.metadata
 
         stripe_session_id = checkout_session.id
-        product_id = metadata.product_id
-        quantity = int(metadata.quantity)
 
         existing_order = (
             db.query(Order)
@@ -70,7 +68,6 @@ async def stripe_webhook(
             }
 
         customer_email = None
-
         if checkout_session.customer_details:
             customer_email = checkout_session.customer_details.email
 
@@ -78,26 +75,67 @@ async def stripe_webhook(
         if metadata.get("user_id"):
             user_id = int(metadata.user_id)
 
-        new_order = Order(
-            stripe_session_id=stripe_session_id,
-            product_id=product_id,
-            quantity=quantity,
-            payment_status=checkout_session.payment_status,
-            amount_total=checkout_session.amount_total,
-            customer_email=customer_email,
-            user_id=user_id,
-            status="pending",
-            status_updated_at=datetime.now(timezone.utc),
-        )
+        # Handle cart checkout (multiple items)
+        if metadata.get("cart_checkout") == "true":
+            stripe.api_key = settings.stripe_secret_key
+            line_items = stripe.checkout.Session.list_line_items(stripe_session_id, limit=100)
+            
+            for item in line_items.data:
+                product_name = item.description or "Unknown Product"
+                # Try to find product_id from price metadata
+                product_id = "unknown"
+                if item.price and item.price.product:
+                    # Get product from Stripe to check metadata
+                    try:
+                        stripe_product = stripe.Product.retrieve(item.price.product)
+                        if stripe_product.metadata and stripe_product.metadata.get("product_id"):
+                            product_id = stripe_product.metadata.get("product_id")
+                    except Exception:
+                        pass
+                
+                new_order = Order(
+                    stripe_session_id=stripe_session_id,
+                    product_id=product_id,
+                    quantity=item.quantity,
+                    payment_status=checkout_session.payment_status,
+                    amount_total=item.amount_total,
+                    customer_email=customer_email,
+                    user_id=user_id,
+                    status="pending",
+                    status_updated_at=datetime.now(timezone.utc),
+                )
+                db.add(new_order)
+            
+            try:
+                db.commit()
+                print("CART ORDER SAVED:", stripe_session_id)
+            except Exception:
+                db.rollback()
+                raise
+        else:
+            # Handle single product checkout
+            product_id = metadata.product_id
+            quantity = int(metadata.quantity)
 
-        try:
-            db.add(new_order)
-            db.commit()
-            db.refresh(new_order)
-        except Exception:
-            db.rollback()
-            raise
+            new_order = Order(
+                stripe_session_id=stripe_session_id,
+                product_id=product_id,
+                quantity=quantity,
+                payment_status=checkout_session.payment_status,
+                amount_total=checkout_session.amount_total,
+                customer_email=customer_email,
+                user_id=user_id,
+                status="pending",
+                status_updated_at=datetime.now(timezone.utc),
+            )
 
-        print("ORDER SAVED:", new_order.id)
+            try:
+                db.add(new_order)
+                db.commit()
+                db.refresh(new_order)
+                print("ORDER SAVED:", new_order.id)
+            except Exception:
+                db.rollback()
+                raise
 
     return {"received": True}
