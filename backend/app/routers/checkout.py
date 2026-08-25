@@ -113,6 +113,8 @@ def create_cart_checkout_session(
             detail="Stripe test key is not configured correctly.",
         )
 
+    stripe.api_key = settings.stripe_secret_key
+
     line_items = []
     for item in checkout_request.items:
         product = get_product(item.product_id)
@@ -186,8 +188,6 @@ def create_cart_checkout_session(
             discount_amount = int(total_amount * coupon.discount_value / 100)
         else:
             discount_amount = min(coupon.discount_value, total_amount)
-
-    stripe.api_key = settings.stripe_secret_key
 
     try:
         session_params = {
