@@ -1,12 +1,13 @@
 import secrets
 from datetime import datetime, timedelta, timezone
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.dependencies import get_current_user
+from app.middleware import limiter
 from app.models import PasswordReset, User
 from app.schemas import (
     ForgotPasswordRequest,
@@ -35,7 +36,9 @@ router = APIRouter(
     response_model=UserOut,
     status_code=status.HTTP_201_CREATED,
 )
+@limiter.limit("5/minute")
 def register(
+    request: Request,
     user_data: UserRegister,
     db: Session = Depends(get_db),
 ):
@@ -77,7 +80,9 @@ def register(
     "/login",
     response_model=Token,
 )
+@limiter.limit("10/minute")
 def login(
+    request: Request,
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db),
 ):
@@ -123,13 +128,15 @@ def get_me(
     "/forgot-password",
     response_model=ForgotPasswordResponse,
 )
+@limiter.limit("5/minute")
 def forgot_password(
-    request: ForgotPasswordRequest,
+    request: Request,
+    request_body: ForgotPasswordRequest,
     db: Session = Depends(get_db),
 ):
     user = (
         db.query(User)
-        .filter(User.email == request.email.lower())
+        .filter(User.email == request_body.email.lower())
         .first()
     )
 

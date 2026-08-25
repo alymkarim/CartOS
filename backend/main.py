@@ -1,13 +1,16 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
+from slowapi.errors import RateLimitExceeded
 
 from app.config import get_settings
+from app.middleware import limiter, rate_limit_exceeded_handler
 from app.routers import auth, cart, checkout, coupons, orders, products, reviews, webhook, wishlist
 
 settings = get_settings()
 
 app = FastAPI(title="PayForge API")
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, rate_limit_exceeded_handler)
 
 app.add_middleware(
     CORSMiddleware,

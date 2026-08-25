@@ -10,6 +10,7 @@ os.environ["STRIPE_WEBHOOK_SECRET"] = "whsec_fake"
 os.environ["JWT_SECRET_KEY"] = "test-secret-key-for-testing"
 
 from app.database import Base, get_db
+from app.middleware import limiter
 from main import app
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
@@ -49,4 +50,5 @@ def db():
 
 @pytest.fixture()
 def client():
+    limiter.reset()
     return TestClient(app)
