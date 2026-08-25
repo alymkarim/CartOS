@@ -4,10 +4,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.routers import auth, cart, checkout, coupons, orders, products, reviews, webhook, wishlist
-from app.database import Base, engine
-from app import models
-
-Base.metadata.create_all(bind=engine)
 
 settings = get_settings()
 
