@@ -1,24 +1,26 @@
 import { Link, useSearchParams } from "react-router-dom";
 import { useCart } from "../contexts/CartContext";
 import { useEffect, useState } from "react";
+import { api } from "../services/api";
 import Button from "../components/ui/Button";
 
 export default function CheckoutSuccess() {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("session_id");
-  const { clearCart } = useCart();
+  const { items, clearCart } = useCart();
   const [cleared, setCleared] = useState(false);
 
   useEffect(() => {
-    if (!cleared) {
-      try {
-        clearCart();
-        setCleared(true);
-      } catch (err) {
-        console.error("Failed to clear cart:", err);
-      }
+    if (!cleared && items.length > 0) {
+      // Create orders locally for testing
+      api.post("/api/checkout/cart/simulate", {
+        items: items.map(({ product_id, quantity }) => ({ product_id, quantity })),
+      }).catch(console.error);
+      
+      clearCart();
+      setCleared(true);
     }
-  }, [clearCart, cleared]);
+  }, [clearCart, cleared, items]);
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-16 text-center">
