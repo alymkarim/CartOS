@@ -77,28 +77,23 @@ async def stripe_webhook(
 
         # Handle cart checkout (multiple items)
         if metadata.get("cart_checkout") == "true":
-            stripe.api_key = settings.stripe_secret_key
-            line_items = stripe.checkout.Session.list_line_items(stripe_session_id, limit=100)
+            items_str = metadata.get("items", "")
+            items = items_str.split("|") if items_str else []
             
-            for item in line_items.data:
-                product_name = item.description or "Unknown Product"
-                # Try to find product_id from price metadata
-                product_id = "unknown"
-                if item.price and item.price.product:
-                    # Get product from Stripe to check metadata
-                    try:
-                        stripe_product = stripe.Product.retrieve(item.price.product)
-                        if stripe_product.metadata and stripe_product.metadata.get("product_id"):
-                            product_id = stripe_product.metadata.get("product_id")
-                    except Exception:
-                        pass
+            for item_str in items:
+                if ":" in item_str:
+                    product_id, quantity_str = item_str.split(":", 1)
+                    quantity = int(quantity_str)
+                else:
+                    product_id = item_str
+                    quantity = 1
                 
                 new_order = Order(
                     stripe_session_id=stripe_session_id,
                     product_id=product_id,
-                    quantity=item.quantity,
+                    quantity=quantity,
                     payment_status=checkout_session.payment_status,
-                    amount_total=item.amount_total,
+                    amount_total=checkout_session.amount_total,
                     customer_email=customer_email,
                     user_id=user_id,
                     status="pending",

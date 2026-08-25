@@ -116,6 +116,7 @@ def create_cart_checkout_session(
     stripe.api_key = settings.stripe_secret_key
 
     line_items = []
+    product_ids = []
     for item in checkout_request.items:
         product = get_product(item.product_id)
         if product is None:
@@ -123,24 +124,18 @@ def create_cart_checkout_session(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Product {item.product_id} not found.",
             )
-        # Create a Stripe product with metadata
-        stripe_product = stripe.Product.create(
-            name=product.name,
-            description=product.description,
-            metadata={"product_id": product.id},
-        )
         line_items.append({
             "price_data": {
                 "currency": product.currency,
                 "product_data": {
                     "name": product.name,
                     "description": product.description,
-                    "product": stripe_product.id,
                 },
                 "unit_amount": product.price_cents,
             },
             "quantity": item.quantity,
         })
+        product_ids.append(f"{product.id}:{item.quantity}")
 
     discount_amount = 0
     coupon = None
@@ -201,6 +196,7 @@ def create_cart_checkout_session(
             "metadata": {
                 "user_id": str(current_user.id),
                 "cart_checkout": "true",
+                "items": "|".join(product_ids),
             },
         }
         if discount_amount > 0:
