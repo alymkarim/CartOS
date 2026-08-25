@@ -51,7 +51,10 @@ async def stripe_webhook(
     if event.type == "checkout.session.completed":
         checkout_session = event.data.object
         # Convert Stripe metadata to regular dict
-        metadata = dict(checkout_session.metadata) if checkout_session.metadata else {}
+        metadata = {}
+        if checkout_session.metadata:
+            for key in checkout_session.metadata:
+                metadata[key] = checkout_session.metadata[key]
 
         stripe_session_id = checkout_session.id
 
