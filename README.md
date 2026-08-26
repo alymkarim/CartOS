@@ -1,26 +1,46 @@
 # DevDesk
 
-![DevDesk Demo](frontend/public/main%20page.png)
+![DevDesk Landing](main%20page.png)
 
 A full-stack e-commerce store for developer workspace gear, built with FastAPI, React, PostgreSQL, and Stripe.
 
 ## Screenshots
 
-| Landing Page | Products |
-|:---:|:---:|
-| ![Landing](frontend/public/main%20page.png) | ![Products](frontend/public/productpage.png) |
+**Landing Page** — Hero section with featured products and trust badges.
 
-| Cart | Checkout |
-|:---:|:---:|
-| ![Cart](frontend/public/shoppingcart.png) | ![Stripe](frontend/public/stripepage.png) |
+![Landing Page](main%20page.png)
 
-| Sign In | Wishlist |
-|:---:|:---:|
-| ![Sign In](frontend/public/signin.png) | ![Wishlist](frontend/public/wishlist.png) |
+**Product Catalog** — Browse all 12 developer workspace products with search.
 
-| Order History | Success |
-|:---:|:---:|
-| ![Orders](frontend/public/orderhistory.png) | ![Success](frontend/public/checkoutsuccess.png) |
+![Product Catalog](productpage.png)
+
+**Shopping Cart** — Manage items, apply discount codes, see order summary.
+
+![Shopping Cart](shoppingcart.png)
+
+**Stripe Checkout** — Secure payment processing with Stripe test mode.
+
+![Stripe Checkout](stripepage.png)
+
+**Sign In** — JWT authentication with password strength validation.
+
+![Sign In](signin.png)
+
+**Create Account** — Registration with password strength meter.
+
+![Create Account](createacount.png)
+
+**Wishlist** — Save favorite products with heart icon toggle.
+
+![Wishlist](wishlist.png)
+
+**Order History** — Track orders with status timeline.
+
+![Order History](orderhistory.png)
+
+**Checkout Success** — Order confirmation after payment.
+
+![Checkout Success](checkoutsuccess.png)
 
 ## Live Demo
 
