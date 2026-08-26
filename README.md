@@ -184,4 +184,4 @@ npm run lint
 
 ## License
 
-Portfolio project.
+MIT License
