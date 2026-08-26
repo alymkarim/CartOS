@@ -1,5 +1,7 @@
 # DevDesk
 
+![DevDesk Demo](frontend/public/deskdev.gif)
+
 A full-stack e-commerce store for developer workspace gear, built with FastAPI, React, PostgreSQL, and Stripe.
 
 ## Live Demo
