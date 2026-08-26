@@ -22,7 +22,7 @@ PRODUCTS: dict[str, Product] = {
     "developer-mug": Product(
         id="developer-mug",
         name="Debug Fuel Mug",
-        description="Big 12oz mug for those mornings when you need three refills before the code compiles. Dishwasher safe.",
+        description="12oz ceramic mug with a matte black finish. Dishwasher and microwave safe. Holds enough coffee to get through a long debugging session.",
         price_cents=1499,
         currency="eur",
         emoji="☕",
@@ -49,7 +49,7 @@ PRODUCTS: dict[str, Product] = {
     "desk-mat": Product(
         id="desk-mat",
         name="Felt Desk Mat",
-        description="Giant wool felt mat that makes your desk look like you have your life together. Comes with a leather strap to roll it up.",
+        description="Premium wool felt desk mat, 900x400mm. Provides a smooth writing surface and protects your desk. Includes genuine leather strap for storage.",
         price_cents=3499,
         currency="eur",
         emoji="🖱️",
@@ -85,7 +85,7 @@ PRODUCTS: dict[str, Product] = {
     "laptop-stand": Product(
         id="laptop-stand",
         name="Aluminum Laptop Stand",
-        description="Raises your laptop screen to eye level so you stop hunching over like a goblin. Solid aluminum, folds flat.",
+        description="CNC-machined aluminum riser with ventilation cutouts. Raises your screen 6 inches to eye level and folds flat for travel.",
         price_cents=3999,
         currency="eur",
         emoji="💻",
@@ -94,7 +94,7 @@ PRODUCTS: dict[str, Product] = {
     "wireless-mouse": Product(
         id="wireless-mouse",
         name="Precision Wireless Mouse",
-        description="Silent clicks so you don't annoy everyone in the office. 4000 DPI sensor, lasts weeks on a single charge.",
+        description="Ergonomic wireless mouse with 4000 DPI optical sensor, silent micro switches, and USB-C rechargeable battery lasting up to 70 hours.",
         price_cents=4999,
         currency="eur",
         emoji="🖱️",
@@ -103,7 +103,7 @@ PRODUCTS: dict[str, Product] = {
     "monitor-light": Product(
         id="monitor-light",
         name="Monitor Light Bar",
-        description="Clips on your monitor and lights up your desk without screen glare. Your eyes will thank you at 2am.",
+        description="Asymmetric LED light bar with adjustable color temperature (2700K-6500K). Clips onto any monitor, zero screen glare.",
         price_cents=4499,
         currency="eur",
         emoji="💡",
