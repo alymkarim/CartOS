@@ -73,6 +73,42 @@ PRODUCTS: dict[str, Product] = {
         emoji="🔌",
         image_url="https://images.unsplash.com/photo-1760376789478-c1023d2dc007?w=800&h=800&fit=crop",
     ),
+    "ergonomic-chair": Product(
+        id="ergonomic-chair",
+        name="ErgoPro Chair",
+        description="Full mesh ergonomic office chair with adjustable lumbar support, 4D armrests, and breathable seat.",
+        price_cents=34999,
+        currency="eur",
+        emoji="🪑",
+        image_url="https://images.unsplash.com/photo-1592078615290-033ee584e267?w=800&h=800&fit=crop",
+    ),
+    "laptop-stand": Product(
+        id="laptop-stand",
+        name="Aluminum Laptop Stand",
+        description="Adjustable aluminum laptop riser with ventilation holes. Elevates screen to eye level.",
+        price_cents=3999,
+        currency="eur",
+        emoji="💻",
+        image_url="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=800&fit=crop",
+    ),
+    "wireless-mouse": Product(
+        id="wireless-mouse",
+        name="Precision Wireless Mouse",
+        description="Ergonomic wireless mouse with 4000 DPI sensor, silent clicks, and USB-C rechargeable battery.",
+        price_cents=4999,
+        currency="eur",
+        emoji="🖱️",
+        image_url="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=800&fit=crop",
+    ),
+    "monitor-light": Product(
+        id="monitor-light",
+        name="Monitor Light Bar",
+        description="Asymmetric LED light bar that clips onto your monitor. Reduces eye strain with adjustable color temperature.",
+        price_cents=4499,
+        currency="eur",
+        emoji="💡",
+        image_url="https://images.unsplash.com/photo-1507473885765-e6ed057ab6fe?w=800&h=800&fit=crop",
+    ),
 }
 
 

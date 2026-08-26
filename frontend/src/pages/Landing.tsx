@@ -13,7 +13,7 @@ export default function Landing() {
   useEffect(() => {
     api
       .get<Product[]>("/api/products")
-      .then((data) => setProducts(data.slice(0, 4)))
+      .then((data) => setProducts(data.slice(0, 6)))
       .catch(console.error)
       .finally(() => setIsLoading(false));
   }, []);
