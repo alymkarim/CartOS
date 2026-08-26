@@ -1,8 +1,26 @@
 # DevDesk
 
-![DevDesk Demo](frontend/public/deskdev.gif)
+![DevDesk Demo](frontend/public/main%20page.png)
 
 A full-stack e-commerce store for developer workspace gear, built with FastAPI, React, PostgreSQL, and Stripe.
+
+## Screenshots
+
+| Landing Page | Products |
+|:---:|:---:|
+| ![Landing](frontend/public/main%20page.png) | ![Products](frontend/public/productpage.png) |
+
+| Cart | Checkout |
+|:---:|:---:|
+| ![Cart](frontend/public/shoppingcart.png) | ![Stripe](frontend/public/stripepage.png) |
+
+| Sign In | Wishlist |
+|:---:|:---:|
+| ![Sign In](frontend/public/signin.png) | ![Wishlist](frontend/public/wishlist.png) |
+
+| Order History | Success |
+|:---:|:---:|
+| ![Orders](frontend/public/orderhistory.png) | ![Success](frontend/public/checkoutsuccess.png) |
 
 ## Live Demo
 
