@@ -80,7 +80,7 @@ PRODUCTS: dict[str, Product] = {
         price_cents=34999,
         currency="eur",
         emoji="🪑",
-        image_url="https://images.unsplash.com/photo-1592078615290-033ee584e267?w=800&h=800&fit=crop",
+        image_url="https://images.unsplash.com/photo-1670946839270-cc4febd43b09?w=800&h=800&fit=crop",
     ),
     "laptop-stand": Product(
         id="laptop-stand",
@@ -89,7 +89,7 @@ PRODUCTS: dict[str, Product] = {
         price_cents=3999,
         currency="eur",
         emoji="💻",
-        image_url="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=800&fit=crop",
+        image_url="https://images.unsplash.com/photo-1652198144911-4f204ccf35e6?w=800&h=800&fit=crop",
     ),
     "wireless-mouse": Product(
         id="wireless-mouse",
@@ -98,7 +98,7 @@ PRODUCTS: dict[str, Product] = {
         price_cents=4999,
         currency="eur",
         emoji="🖱️",
-        image_url="https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=800&fit=crop",
+        image_url="https://images.unsplash.com/photo-1543729318-4fb8e144c28b?w=800&h=800&fit=crop",
     ),
     "monitor-light": Product(
         id="monitor-light",
@@ -107,7 +107,7 @@ PRODUCTS: dict[str, Product] = {
         price_cents=4499,
         currency="eur",
         emoji="💡",
-        image_url="https://images.unsplash.com/photo-1507473885765-e6ed057ab6fe?w=800&h=800&fit=crop",
+        image_url="https://images.unsplash.com/photo-1658856183566-7a6ea4d4d6cb?w=800&h=800&fit=crop",
     ),
 }
 
