@@ -76,7 +76,7 @@ PRODUCTS: dict[str, Product] = {
     "ergonomic-chair": Product(
         id="ergonomic-chair",
         name="ErgoPro Chair",
-        description="Full mesh ergonomic office chair with adjustable lumbar support, 4D armrests, and breathable seat.",
+        description="High-back mesh chair with adjustable lumbar support and customizable armrests. Keeps you comfortable during long coding sessions.",
         price_cents=34999,
         currency="eur",
         emoji="🪑",
