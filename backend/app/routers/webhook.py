@@ -65,7 +65,6 @@ async def stripe_webhook(
         )
 
         if existing_order:
-            print("Order already exists:", stripe_session_id)
             return {
                 "received": True,
                 "message": "Order already processed",
@@ -107,7 +106,6 @@ async def stripe_webhook(
             
             try:
                 db.commit()
-                print("CART ORDER SAVED:", stripe_session_id)
             except Exception:
                 db.rollback()
                 raise
@@ -132,7 +130,6 @@ async def stripe_webhook(
                 db.add(new_order)
                 db.commit()
                 db.refresh(new_order)
-                print("ORDER SAVED:", new_order.id)
             except Exception:
                 db.rollback()
                 raise

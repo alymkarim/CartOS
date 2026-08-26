@@ -96,39 +96,6 @@ def create_checkout_session(
     )
 
 
-@router.post("/cart/simulate", response_model=dict)
-def simulate_cart_order(
-    checkout_request: CartCheckoutRequest,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
-):
-    """Simulate order creation for local testing without webhook."""
-    from app.models import Order
-    
-    orders = []
-    for item in checkout_request.items:
-        product = get_product(item.product_id)
-        if product is None:
-            continue
-        
-        new_order = Order(
-            stripe_session_id=f"sim_{datetime.now().timestamp()}",
-            product_id=item.product_id,
-            quantity=item.quantity,
-            payment_status="paid",
-            amount_total=product.price_cents * item.quantity,
-            customer_email=current_user.email,
-            user_id=current_user.id,
-            status="pending",
-            status_updated_at=datetime.now(timezone.utc),
-        )
-        db.add(new_order)
-        orders.append(new_order)
-    
-    db.commit()
-    return {"message": f"Created {len(orders)} orders", "order_ids": [o.id for o in orders]}
-
-
 @router.post(
     "/cart",
     response_model=CheckoutResponse,
